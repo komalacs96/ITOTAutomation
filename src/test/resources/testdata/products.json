@@ -1,0 +1,16 @@
+[
+  {
+  "product_id": "789",
+  "name": "Smartphone",
+  "description": "High-performance smartphone with advanced features.",
+  "price": 599.99,
+  "stock_quantity": 100
+},
+{
+  "product_id": "800",
+  "name": "Laptop",
+  "description": "13th-generation Intel Core i7 processor",
+  "price": 70000,
+  "stock_quantity": 25
+}
+]

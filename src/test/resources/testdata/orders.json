@@ -1,0 +1,7 @@
+{
+  "order_id": "123456",
+  "product_id": "789",
+  "quantity": 10,
+  "customer_id": "987654",
+  "status": "pending"
+}

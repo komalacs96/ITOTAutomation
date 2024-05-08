@@ -1,0 +1,50 @@
+name: $(Date:yyyyMMdd)$(Rev:.r)
+
+variables:
+  - group: ITOT-test-automation
+
+jobs:
+  - job: Test
+    timeoutInMinutes: 60
+    displayName: ITOTAutomationTestScripts
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+      - checkout: self
+        clean: true
+        persistCredentials: true
+
+      - script: |
+          mvn test -Denvironment.name=$(Env) -Dcucumber.options="--tags $(TestTags)"
+        continueOnError: true
+        displayName: "ITOT Tool"
+
+      - task: PublishBuildArtifacts@1
+        inputs:
+          pathtoPublish: 'report'
+          artifactName: Test Report
+
+      - task: PublishTestResults@2
+        displayName: 'Publish XML Test Report'
+        inputs:
+          testResultsFormat: "JUnit"
+          testResultsFiles: "report/xml-report/cucumber.xml"
+          searchFolder: "$(System.DefaultWorkingDirectory)"
+          testRunTitle: "Test Junit Report"
+
+      - task: PublishCucumberReport@1
+        displayName: 'Publish Cucumber Report'
+        condition: always()
+        inputs:
+          jsonDir: $(Build.SourcesDirectory)/report/jsonReports/
+          outputPath: $(Build.SourcesDirectory)/report/
+
+schedules:
+  - cron: "30 1 * * Mon,Tues,Wed,Thur,Fri,Sat,Sun"
+    displayName: Daily build
+    always: true
+    branches:
+      include:
+        - pipeline-creation
+      exclude:
+        - releases/ancient/*
